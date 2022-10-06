@@ -24,19 +24,34 @@ function ArrayUpdate() {
     restoreList.innerHTML = ""
 
     for (let i = 0; i < articles.length; i++) {
-        list.innerHTML += `<li id="li_${articles[i]}">${articles[i]} <button id="${articles[i]}">Hide</button></li>`;
+        list.innerHTML += `<li id="li_${articles[i]}">${articles[i]} <button id="hide_${articles[i]}">Hide</button> <button id="del_${articles[i]}">x</button></li>`;
         restoreList.innerHTML += `<option value="${articles[i]}">`
     }
 }
 ArrayUpdate()
 
-document.getElementById("buttons").addEventListener("click", someFunction);
+document.getElementById("buttons").addEventListener("click", hideDelArticle);
 
-function someFunction(event) {
+function hideDelArticle(event) {
     const el = event.target.id;
-    if (!articles.includes(el)) return;
-    var listEl = document.getElementById(`li_${el}`);
-    listEl.style.display = "none";
+
+    var splitedValue = el.split("_");
+    var value = splitedValue[0]
+    switch (value) {
+        case "del":
+            if (!articles.includes(splitedValue[1])) return;
+            var listEl = document.getElementById(`li_${splitedValue[1]}`);
+            listEl.remove()
+            articles.pop(splitedValue[1])
+            ArrayUpdate()
+            break;
+        case "hide":
+            if (!articles.includes(splitedValue[1])) return;
+            var listEl = document.getElementById(`li_${splitedValue[1]}`);
+            listEl.style.display = "none";
+        default: 
+        console.log("none")
+    }
 }
 
 
@@ -54,12 +69,9 @@ document.getElementById('submitElement').addEventListener('click', function () {
 document.getElementById('restoreSubmit').addEventListener('click', function () {
     var selectedRestore = document.getElementById('selectedOption');
     console.log(selectedRestore.value)
-    
+
     var showEl = document.getElementById(`li_${selectedRestore.value}`);
-    if(showEl.style.display != "none") return alert("This article is not hide")
+    if (showEl.style.display != "none") return alert("This article is not hide")
     showEl.style.display = "";
     selectedRestore.value = "";
 })
-
-
-
